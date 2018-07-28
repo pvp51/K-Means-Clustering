@@ -9,16 +9,37 @@ import sys
 ################
 
 #####
+## Calculate Mean
+######
+def calcMean(n):
+    for i in range(0, numK, 1):
+        for x in range(0, dataRows, 1):
+            if(trainlabels.get(x) == i):
+                n[i] = n[i] + 1;
+                for j in range(0,dataCols,1):
+                    #print("Cluster: ",i ,"Row: ",x," col : ",j);
+                    #print("Value :", data[x][j]);
+                    m[i][j] += data[x][j]
+
+    for i in range(0,numK,1):
+        for j in range(0,dataCols,1):
+            m[i][j] /= n[i];
+
+
+#####
 ## Calculate distance
 ######
 def calcDist(d, index, m):
     minValue = sys.maxsize
+    minIndex = 0
     for i in  range (0, numK):
         distance = math.sqrt(sum([(a - b) ** 2 for a, b in zip(d, m[i])]))
         if(distance < minValue):
             minValue = distance
-            trainlabels[index] = i
-        print("Distance: ",distance)
+            minIndex = i
+        print("d: ", d, "Mean: ", m[i], " Cluster: ", i, "Distance: ",distance)
+    trainlabels[index] = minIndex
+    
 
 ################
 ##Read Data
@@ -69,30 +90,18 @@ for i in range(0,numK,1):
 
 #print("Initial Mean : ",m)
 print("Before Trainlabels : ",trainlabels)
+
 ##Calculate mean
 n = [0] * numK;
-for i in range(0, numK, 1):
-    for x in range(0, dataRows, 1):
-        if(trainlabels.get(x) == i):
-            n[i] = n[i] + 1;
-            for j in range(0,dataCols,1):
-                #print("Cluster: ",i ,"Row: ",x," col : ",j);
-                #print("Value :", data[x][j]);
-                m[i][j] += data[x][j]
-    #print("N: ",n)
+calcMean(n)
 
-for i in range(0,numK,1):
-    for j in range(0,dataCols,1):
-        m[i][j] /= n[i];
-
+##Calculate distance and classify cluster
 for i in range(0, dataRows):
     calcDist(data[i], i, m)
 
 
-
-
 ################
-##Classify unlabeled points
+##Print statements
 ###############
 #for i in range(0, dataRows, 1):
 print("Data : ",data)
