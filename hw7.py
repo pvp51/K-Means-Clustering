@@ -111,8 +111,9 @@ while(lastObjective - objective > diff):
     total = 0
     for i in range(0, numK, 1):
         for j in range(0, dataCols, 1):
-            total += math.sqrt(sum([(a - b) ** 2 for a, b in zip(data[j], m[i])]))
-    #print("Total: ",total)
+            if(trainlabels.get(j) == i):
+                total += math.sqrt(sum([(a - b) ** 2 for a, b in zip(data[j], m[i])]))
+    ##print("Total: ",total)
     objective = total
 
 
