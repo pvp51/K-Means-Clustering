@@ -12,7 +12,7 @@ import sys
 ## Calculate Mean
 ######
 def calcMean():
-    n = [0] * numK;
+    n = [0] * numK; ##Initialize array that holds number of rows for particular cluster
     for i in range(0, numK, 1):
         for x in range(0, dataRows, 1):
             if(trainlabels.get(x) == i):
@@ -25,7 +25,7 @@ def calcMean():
     for i in range(0,numK,1):
         for j in range(0,dataCols,1):
             m[i][j] /= n[i];
-            print("N: ",n[i])
+    #print("Mean: ",m)
 
 
 #####
@@ -91,17 +91,12 @@ for i in range(0,numK,1):
     m.append(x)
 
 #print("Initial Mean : ",m)
-print("Before Trainlabels : ",trainlabels)
+#print("Before Trainlabels : ",trainlabels)
 
-##Initialize array that holds number of rows for particular cluster
-#n = [0] * numK;
-
-itr = 1
 lastObjective = 10000000
 objective = lastObjective - 10
 diff = 0.001
 while(lastObjective - objective > diff):
-#while(itr>0):
     lastObjective = objective
     
     ##Calculate mean
@@ -117,18 +112,17 @@ while(lastObjective - objective > diff):
     for i in range(0, numK, 1):
         for j in range(0, dataCols, 1):
             total += math.sqrt(sum([(a - b) ** 2 for a, b in zip(data[j], m[i])]))
-    print("Total: ",total)
-
+    #print("Total: ",total)
     objective = total
-        
-    #itr -= 1
 
 
 ################
 ##Print statements
 ###############
-#for i in range(0, dataRows, 1):
-print("Data : ",data)
-print("Mean : ",m)
-print("After trainlabels : ",trainlabels)
+for i in range(0, dataRows, 1):
+    if(trainlabels.get(i) != None):
+        print(trainlabels[i], " ",i) 
+#print("Data : ",data)
+#print("Mean : ",m)
+#print("After trainlabels : ",trainlabels)
 
