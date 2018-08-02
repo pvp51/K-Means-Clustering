@@ -12,7 +12,9 @@ import sys
 ## Calculate Mean
 ######
 def calcMean():
+    
     n = [0] * numK; ##Initialize array that holds number of rows for particular cluster
+    #m = [[0] * dataCols for i in range(numK)]
     for i in range(0, numK, 1):
         for x in range(0, dataRows, 1):
             if(trainlabels.get(x) == i):
@@ -24,7 +26,8 @@ def calcMean():
 
     for i in range(0,numK,1):
         for j in range(0,dataCols,1):
-            m[i][j] /= n[i];
+            if(n[i]!=0):
+                m[i][j] /= n[i]
     #print("Mean: ",m)
 
 
@@ -35,13 +38,12 @@ def calcDist(d, index, m):
     minValue = sys.maxsize
     minIndex = 0
     for i in  range (0, numK):
-        distance = math.sqrt(sum([(a - b) ** 2 for a, b in zip(d, m[i])]))
+        distance = sum([(a - b) ** 2 for a, b in zip(d, m[i])])
         if(distance < minValue):
             minValue = distance
             minIndex = i
         #print("d: ", d, "Mean: ", m[i], " Cluster: ", i, "Distance: ",distance)
     trainlabels[index] = minIndex
-    
 
 ################
 ##Read Data
@@ -81,15 +83,6 @@ for j in range(0, dataRows, 1):
         trainlabels[j] = k
         k+=1
 
-##Initialize mean
-m0=[]
-for j in range(0,dataCols,1):
-    m0.append(0)
-m=[]
-for i in range(0,numK,1):
-    x = copy.deepcopy(m0)
-    m.append(x)
-
 #print("Initial Mean : ",m)
 #print("Before Trainlabels : ",trainlabels)
 
@@ -99,21 +92,32 @@ diff = 0.001
 while(lastObjective - objective > diff):
     lastObjective = objective
     
+    ##Initialize mean
+    m0=[]
+    for j in range(0,dataCols,1):
+        m0.append(0)
+    m=[]
+    for i in range(0,numK,1):
+        x = copy.deepcopy(m0)
+        m.append(x)
+        
     ##Calculate mean
     calcMean()
+    #print("Mean: ",m)
     
     ##Calculate distance and classify cluster
     for i in range(0, dataRows):
         calcDist(data[i], i, m)
         #print("Iterate Trainlabels : ",trainlabels)
+    #print("Trainlabels : ",trainlabels)
 
     ##Calculate objective
     total = 0
     for i in range(0, numK, 1):
-        for j in range(0, dataCols, 1):
+        for j in range(0, dataRows, 1):
             if(trainlabels.get(j) == i):
-                total += math.sqrt(sum([(a - b) ** 2 for a, b in zip(data[j], m[i])]))
-    ##print("Total: ",total)
+                total += sum([(a - b) ** 2 for a, b in zip(data[j], m[i])])
+    print("Total: ",total)
     objective = total
 
 
@@ -121,8 +125,8 @@ while(lastObjective - objective > diff):
 ##Print statements
 ###############
 for i in range(0, dataRows, 1):
-    if(trainlabels.get(i) != None):
-        print(trainlabels[i], " ",i) 
+    #if(trainlabels.get(i) != None):
+    print(trainlabels[i], " ",i) 
 #print("Data : ",data)
 #print("Mean : ",m)
 #print("After trainlabels : ",trainlabels)
