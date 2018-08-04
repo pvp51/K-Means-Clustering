@@ -3,6 +3,7 @@ from sys import argv
 import math
 import copy
 import sys
+import random
 
 ################
 ##  py hw7.py datafile numberOfCluster
@@ -73,15 +74,8 @@ numK = int(sys.argv[2])
 
 ##Initializing clusters
 trainlabels={}
-k = 0
-for j in range(0, dataRows, 1): 
-    if(k < numK):
-        trainlabels[j] = k
-        k+=1
-    else:
-        k = 0
-        trainlabels[j] = k
-        k+=1
+for x in range(0,dataRows):
+    trainlabels[x]=random.sample(range(0, numK), 1)[0] 
 
 #print("Initial Mean : ",m)
 #print("Before Trainlabels : ",trainlabels)
